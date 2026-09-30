@@ -1,6 +1,6 @@
 {
-  "extends": "@JaShipping/config/tsconfig.base.json",
-  "compilerOptions": {
-    "noEmit": true
-  }
+	"extends": "@JaShipping/config/tsconfig.base.json",
+	"compilerOptions": {
+		"noEmit": true
+	}
 }

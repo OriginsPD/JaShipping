@@ -115,6 +115,28 @@ JaShipping/
 │   └── db/          # Database schema & queries
 ```
 
+## Staff / admin fixture path (local QA)
+
+Customer sign-up creates a `customer_profile` with `role = 'customer'`. To exercise frames 07–09 locally, promote a fixture user after they have signed in once (so the profile row exists):
+
+```sql
+-- Promote by email (use synthetic addresses in fixtures, e.g. staff@jashipping.example)
+UPDATE customer_profile
+SET role = 'staff'  -- or 'admin'
+WHERE user_id = (
+  SELECT id FROM "user" WHERE email = 'staff@jashipping.example'
+);
+```
+
+Or with Docker Compose Postgres:
+
+```bash
+docker compose exec postgres psql -U postgres -d JaShipping -c \
+  "UPDATE customer_profile SET role = 'admin' WHERE user_id = (SELECT id FROM \"user\" WHERE email = 'admin@jashipping.example');"
+```
+
+Then open `/staff/receive`, `/staff/ship`, and (admin only) `/staff/admin`. Customers hitting staff tRPC procedures receive `FORBIDDEN`. Do not invent fee/customs amounts — UI keeps the UNVERIFIED fee note.
+
 ## Available Scripts
 
 - `bun run dev`: Start all applications in development mode
