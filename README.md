@@ -137,6 +137,21 @@ docker compose exec postgres psql -U postgres -d JaShipping -c \
 
 Then open `/staff/receive`, `/staff/ship`, and (admin only) `/staff/admin`. Customers hitting staff tRPC procedures receive `FORBIDDEN`. Do not invent fee/customs amounts — UI keeps the UNVERIFIED fee note.
 
+## Phase 4 synthetic pilot
+
+Runnable API/tRPC pilot covering the MVP happy path plus failure paths (customer forbidden on staff; invalid ship request rejected). Uses synthetic `*.jashipping.example` emails and the SQL fixture promote path above.
+
+1. Start Postgres and the API (`bun run db:start` then `bun run dev:server`, or your usual stack).
+2. From the repo root:
+
+```bash
+bun run pilot:phase4
+```
+
+Optional: `SERVER_URL=http://localhost:3000 bun run pilot:phase4`
+
+The script prints a JSON report to stdout and exits `0` on full pass, `1` on any step failure. Source: `apps/server/scripts/phase4-pilot.ts`.
+
 ## Available Scripts
 
 - `bun run dev`: Start all applications in development mode
@@ -149,6 +164,7 @@ Then open `/staff/receive`, `/staff/ship`, and (admin only) `/staff/admin`. Cust
 - `bun run db:migrate`: Run database migrations
 - `bun run db:studio`: Open database studio UI
 - `bun run check`: Run Biome formatting and linting
+- `bun run pilot:phase4`: Run the Phase 4 synthetic E2E pilot (API must be up)
 - `bun run docker:build`: Build the Docker Compose images
 - `bun run docker:up`: Build and start the Docker Compose stack
 - `bun run docker:logs`: Tail logs from the Docker Compose stack
